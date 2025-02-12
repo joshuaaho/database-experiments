@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  mongo:
+    build:
+      context: mongodb # Path to your Express app
+      dockerfile: Dockerfile # Replace with your Dockerfile name if different
+    container_name: mongo
+    ports:
+      - "27017:27017"
+  # volumes:
+  #   - mongo_data:/data/db # Persist MongoDB data
+
+  express:
+    build:
+      context: server # Path to your Express app
+      dockerfile: Dockerfile # Replace with your Dockerfile name if different
+    ports:
+      - "3000:3000" # Expose Express server to host
+    container_name: express
+
+    depends_on:
+      - mongo # Wait for MongoDB to be ready
+    volumes:
+      - "./server:/usr/src/app"
+  # volumes:
+  #   - ./your-express-app:/app  # Transfer files to the Express server
+  #   mongo-express:
+  #     image: mongo-express
+  #     ports:
+  #       - "8081:8081"  # Expose Mongo Express to host
+  #     environment:
+  #       - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017/  # Connect to MongoDB
+
+  # volumes:
+  #   mongo_data:  # Volume for MongoDB data persistence
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/?replicaSet=rs0&directConnection=true
