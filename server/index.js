@@ -209,6 +209,28 @@ app.post("/test3/reset", async (req, res) => {
   res.json({});
 });
 
+app.post("/test6", async (req, res) => {
+  const session = client.startSession();
+  console.log("ello");
+  session.startTransaction();
+  const db = client.db("test");
+  const collection = db.collection("test6");
+
+  try {
+    const result = await collection.findOneAndUpdate(
+      { k: 6 },
+      { $inc: { k: 1 } },
+      { session: session }
+    );
+    await new Promise((r) => setTimeout(r, 50000));
+    await session.commitTransaction();
+    session.endSession();
+  } catch (err) {
+    session.abortTransaction();
+  }
+
+  res.json({});
+});
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
