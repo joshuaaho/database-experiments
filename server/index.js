@@ -48,11 +48,10 @@ app.post("/test1/withoutTransaction", async (req, res) => {
 app.post("/test1/reset", async (req, res) => {
   const db = client.db("test");
   const collection = db.collection("test1");
+  await collection.deleteMany({});
 
-  await collection.findOneAndUpdate(
-    { food: "tomatoes" },
-    { $set: { stock: 0 } } // Use $set to update the stock
-  );
+  // Insert a new document
+  await collection.insertMany([{ food: "tomatoes", stock: 0 }]);
 
   res.end();
 });

@@ -30,3 +30,18 @@ db.test3.insertMany([
     on_call: true,
   },
 ]);
+
+db.test4.insertMany([
+  {
+    value: "0",
+  },
+  {
+    value: "0",
+  },
+  {
+    value: "0",
+  },
+  {
+    value: "0",
+  },
+]);
